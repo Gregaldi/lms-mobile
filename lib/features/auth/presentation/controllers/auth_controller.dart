@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:lms_mobile/core/constants/app_constants.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/auth_usecases.dart';
@@ -8,29 +9,29 @@ class AuthController extends GetxController {
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final CheckAuthUseCase checkAuthUseCase;
-  
+
   AuthController({
     required this.loginUseCase,
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
     required this.checkAuthUseCase,
   });
-  
+
   final Rx<User?> _currentUser = Rx<User?>(null);
   final RxBool _isLoading = false.obs;
   final RxString _errorMessage = ''.obs;
-  
+
   User? get currentUser => _currentUser.value;
   bool get isLoading => _isLoading.value;
   String get errorMessage => _errorMessage.value;
   bool get isAuthenticated => _currentUser.value != null;
-  
+
   @override
   void onInit() {
     super.onInit();
     checkAuth();
   }
-  
+
   Future<void> checkAuth() async {
     try {
       final isAuth = await checkAuthUseCase();
@@ -41,7 +42,7 @@ class AuthController extends GetxController {
       _currentUser.value = null;
     }
   }
-  
+
   Future<void> login({
     required String schoolId,
     required String email,
@@ -49,17 +50,17 @@ class AuthController extends GetxController {
   }) async {
     _isLoading.value = true;
     _errorMessage.value = '';
-    
+
     try {
       final user = await loginUseCase(
         schoolId: schoolId,
         email: email,
         password: password,
       );
-      
+
       _currentUser.value = user;
       _isLoading.value = false;
-      
+
       // Navigate based on role
       _navigateBasedOnRole(user);
     } catch (e) {
@@ -72,7 +73,7 @@ class AuthController extends GetxController {
       );
     }
   }
-  
+
   void _navigateBasedOnRole(User user) {
     switch (user.role) {
       case UserRole.student:
@@ -89,7 +90,7 @@ class AuthController extends GetxController {
         break;
     }
   }
-  
+
   Future<void> logout() async {
     try {
       await logoutUseCase();
