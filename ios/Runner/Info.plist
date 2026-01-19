@@ -49,5 +49,9 @@
 	<string>This app needs camera access for attendance selfie.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs photo library access.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

@@ -3,18 +3,25 @@ import 'package:get/get.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/attendance/presentation/pages/mark_attendance_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../constants/app_constants.dart';
 import 'bindings.dart';
 
 class AppRoutes {
+  static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String studentHome = '/student/home';
   static const String teacherHome = '/teacher/home';
   static const String parentHome = '/parent/home';
   static const String adminHome = '/admin/home';
   static const String markAttendance = '/attendance/mark';
-  
+
   static List<GetPage> get pages => [
+        GetPage(
+          name: onboarding,
+          page: () => const OnboardingPage(),
+          binding: OnboardingBinding(),
+        ),
         GetPage(
           name: login,
           page: () => const LoginPage(),
@@ -84,15 +91,15 @@ class AuthMiddleware extends GetMiddleware {
 
 class RoleMiddleware extends GetMiddleware {
   final List<UserRole> allowedRoles;
-  
+
   RoleMiddleware({required this.allowedRoles});
-  
+
   @override
   RouteSettings? redirect(String? route) {
     try {
       final authController = Get.find<AuthController>();
       final user = authController.currentUser;
-      
+
       if (user == null || !allowedRoles.contains(user.role)) {
         return const RouteSettings(name: AppRoutes.login);
       }
@@ -100,7 +107,7 @@ class RoleMiddleware extends GetMiddleware {
       // AuthController not initialized yet, redirect to login
       return const RouteSettings(name: AppRoutes.login);
     }
-    
+
     return null;
   }
 }
@@ -109,7 +116,7 @@ class RoleMiddleware extends GetMiddleware {
 
 class StudentHomePage extends GetView<AuthController> {
   const StudentHomePage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +167,7 @@ class StudentHomePage extends GetView<AuthController> {
 
 class TeacherHomePage extends GetView<AuthController> {
   const TeacherHomePage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +213,7 @@ class TeacherHomePage extends GetView<AuthController> {
 
 class ParentHomePage extends GetView<AuthController> {
   const ParentHomePage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +264,7 @@ class ParentHomePage extends GetView<AuthController> {
 
 class AdminHomePage extends GetView<AuthController> {
   const AdminHomePage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

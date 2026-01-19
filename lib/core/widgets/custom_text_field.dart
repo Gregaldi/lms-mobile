@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -36,25 +37,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 14,
+            fontSize: 14.sp,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         TextFormField(
           controller: widget.controller,
           obscureText: widget.isPassword && _obscureText,
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           maxLines: widget.isPassword ? 1 : widget.maxLines,
+          style: TextStyle(fontSize: 14.sp),
           decoration: InputDecoration(
             hintText: widget.hint,
-            prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
+            hintStyle: TextStyle(fontSize: 14.sp),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+            prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon, size: 24.sp) : null,
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
+                      size: 24.sp,
                     ),
                     onPressed: () {
                       setState(() {
@@ -64,7 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   )
                 : null,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             filled: true,
             fillColor: Colors.grey[50],
