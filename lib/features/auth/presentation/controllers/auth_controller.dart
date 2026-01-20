@@ -51,6 +51,40 @@ class AuthController extends GetxController {
     _isLoading.value = true;
     _errorMessage.value = '';
 
+    // Simulate network delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    // DUMMY LOGIN IMPLEMENTATION (Replaces API for now)
+    UserRole role = UserRole.student;
+    String name = 'John Student';
+
+    final emailLower = email.toLowerCase();
+    if (emailLower.contains('teacher')) {
+      role = UserRole.teacher;
+      name = 'Sarah Teacher';
+    } else if (emailLower.contains('parent')) {
+      role = UserRole.parent;
+      name = 'Michael Parent';
+    } else if (emailLower.contains('admin')) {
+      role = UserRole.admin;
+      name = 'Admin User';
+    }
+
+    final dummyUser = User(
+      id: '${role.name}_123',
+      schoolId: schoolId,
+      name: name,
+      email: email,
+      role: role,
+      profileImage: null,
+    );
+
+    _currentUser.value = dummyUser;
+    _isLoading.value = false;
+    _navigateBasedOnRole(dummyUser);
+
+    /* 
+    // API Implementation (Temporarily Disabled)
     try {
       final user = await loginUseCase(
         schoolId: schoolId,
@@ -72,6 +106,7 @@ class AuthController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+    */
   }
 
   void _navigateBasedOnRole(User user) {

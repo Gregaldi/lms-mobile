@@ -12,6 +12,7 @@ import '../../features/attendance/domain/repositories/attendance_repository.dart
 import '../../features/attendance/domain/usecases/attendance_usecases.dart';
 import '../../features/attendance/presentation/controllers/attendance_controller.dart';
 import '../../features/onboarding/presentation/controllers/onboarding_controller.dart';
+import '../../features/home/presentation/controllers/home_controller.dart';
 
 class AuthBinding extends Bindings {
   @override
@@ -98,7 +99,7 @@ class AttendanceBinding extends Bindings {
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    // Home page dependencies can be added here
+    Get.lazyPut(() => HomeController());
   }
 }
 

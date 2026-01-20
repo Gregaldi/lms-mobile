@@ -251,6 +251,50 @@ class LoginPage extends GetView<AuthController> {
                         ),
                       ),
                       SizedBox(height: 20.h),
+                      // Dummy Login Buttons
+                      Column(
+                        children: [
+                          Text(
+                            "Dummy Login (Dev Only)",
+                            style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                          ),
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  controller.login(
+                                    schoolId: 'default',
+                                    email: 'student@test.com',
+                                    password: 'dummy',
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueGrey,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Student'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  controller.login(
+                                    schoolId: 'default',
+                                    email: 'teacher@test.com',
+                                    password: 'dummy',
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Teacher'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),

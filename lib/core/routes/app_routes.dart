@@ -4,6 +4,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/attendance/presentation/pages/mark_attendance_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/home/presentation/pages/student_home_page.dart';
 import '../constants/app_constants.dart';
 import 'bindings.dart';
 
@@ -113,57 +114,6 @@ class RoleMiddleware extends GetMiddleware {
 }
 
 // Placeholder home pages
-
-class StudentHomePage extends GetView<AuthController> {
-  const StudentHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Home'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: controller.logout,
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome, ${controller.currentUser?.name ?? "Student"}!',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 24),
-            ListTile(
-              leading: const Icon(Icons.check_circle),
-              title: const Text('Mark Attendance'),
-              onTap: () => Get.toNamed(AppRoutes.markAttendance),
-            ),
-            ListTile(
-              leading: const Icon(Icons.book),
-              title: const Text('My Courses'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.assignment),
-              title: const Text('Assignments'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.payment),
-              title: const Text('Payments'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class TeacherHomePage extends GetView<AuthController> {
   const TeacherHomePage({super.key});
