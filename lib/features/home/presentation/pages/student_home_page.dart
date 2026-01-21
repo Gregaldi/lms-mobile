@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../core/routes/app_routes.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../controllers/home_controller.dart';
 
@@ -22,7 +21,7 @@ class StudentHomePage extends GetView<HomeController> {
           children: [
             // Header Section
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+              padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 40.h),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -30,10 +29,11 @@ class StudentHomePage extends GetView<HomeController> {
                     backgroundImage: user?.profileImage != null
                         ? NetworkImage(user!.profileImage!)
                         : null,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.orange, // Orange bg for avatar
                     child: user?.profileImage == null
-                        ? Icon(Icons.person,
-                            size: 30.sp, color: const Color(0xFF2F5680))
+                        ? Image.asset('assets/images/onboarding1.png',
+                            width: 40.w) // Use asset if available or just icon
+                        // ? Icon(Icons.person, size: 30.sp, color: Colors.white)
                         : null,
                   ),
                   SizedBox(width: 12.w),
@@ -41,7 +41,7 @@ class StudentHomePage extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user?.name ?? 'Student',
+                        user?.name ?? 'Ahmad Rizki', // Placeholder name
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.sp,
@@ -58,10 +58,23 @@ class StudentHomePage extends GetView<HomeController> {
                     ],
                   ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.notifications,
-                        color: Colors.white, size: 24.sp),
+                  Stack(
+                    children: [
+                      Icon(Icons.notifications,
+                          color: Colors.white, size: 28.sp),
+                      Positioned(
+                        right: 2,
+                        top: 2,
+                        child: Container(
+                          width: 8.w,
+                          height: 8.w,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -69,35 +82,41 @@ class StudentHomePage extends GetView<HomeController> {
 
             // Main Content Area
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA), // Light Gray/White Background
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.r),
-                    topRight: Radius.circular(30.r),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Attendance Card
-                      _buildAttendanceCard(),
-                      SizedBox(height: 20.h),
+              child: Stack(
+                children: [
+                  // Scrollable Content
+                  SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.r),
+                          topRight: Radius.circular(30.r),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Attendance Card (Floating)
+                            _buildAttendanceCard(),
+                            SizedBox(height: 30.h),
 
-                      // History Today
-                      _buildHistoryToday(),
-                      SizedBox(height: 20.h),
+                            // History Today
+                            _buildHistoryToday(),
+                            SizedBox(height: 30.h),
 
-                      // Homework Section
-                      _buildHomeworkSection(),
-                      SizedBox(
-                          height: 80.h), // Bottom padding for navigation bar
-                    ],
+                            // Homework Section
+                            _buildHomeworkSection(),
+                            SizedBox(height: 80.h), // Bottom padding
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
@@ -108,89 +127,124 @@ class StudentHomePage extends GetView<HomeController> {
   }
 
   Widget _buildAttendanceCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        children: [
-          // Map Placeholder
-          Container(
-            height: 120.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12.r),
-              // image: const DecorationImage(
-              //   image: AssetImage('assets/images/map_placeholder.png'), // Placeholder
-              //   fit: BoxFit.cover,
-              // ),
-            ),
-            child: Center(
-              child: Icon(Icons.map, size: 40.sp, color: Colors.grey),
+    return Column(
+      children: [
+        // Map Placeholder
+        Container(
+          height: 150.h,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F4F8), // Light bluish gray
+            borderRadius: BorderRadius.circular(16.r),
+            image: const DecorationImage(
+              // Fallback if no asset, but using a colored container with mock elements
+              // If you have a map asset, use it here.
+              // For now, I'll stick to the mock stack but make it look cleaner
+              image: AssetImage(
+                  'assets/images/map_placeholder.png'), // Hypothetical
+              fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 12.h),
-
-          // Address
-          Row(
+          child: Stack(
             children: [
-              Icon(Icons.location_on, size: 16.sp, color: Colors.black87),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Text(
-                  'Jl. Raya Bekasi No.13910, RT.7/RW.1, Cakung Bar., Kec. Cakung',
-                  style: TextStyle(fontSize: 12.sp, color: Colors.black87),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+              // Since we don't have the asset, we use the mock
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE5E7EB),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
               ),
-              Icon(Icons.refresh, size: 16.sp, color: Colors.black54),
+              Center(
+                child: Icon(Icons.map_outlined,
+                    size: 40.sp, color: Colors.blueGrey.withValues(alpha: 0.3)),
+              ),
+              Positioned(top: 30, left: 40, child: _mockMapLine(60)),
+              Positioned(top: 60, left: 30, child: _mockMapLine(90)),
+              Positioned(bottom: 40, right: 50, child: _mockMapLine(70)),
+              // Pin
+              Center(
+                child: Icon(Icons.location_on, color: Colors.red, size: 36.sp),
+              ),
             ],
           ),
-          SizedBox(height: 16.h),
+        ),
+        SizedBox(height: 16.h),
 
-          // Submit Button
-          SizedBox(
-            width: double.infinity,
-            height: 44.h,
-            child: ElevatedButton.icon(
-              onPressed: controller.goToAttendance,
-              icon: Icon(Icons.calendar_today, size: 18.sp),
-              label: Text(
-                'Submit Attendance',
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2F5680),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22.r),
+        // Address
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.location_on, size: 24.sp, color: Colors.black),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                'Jl. Raya Bekasi No.13910, RT.7/RW.1, Cakung Bar., Kec. Cakung',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: const Color(0xFF2F5680), // Dark blue text
+                  height: 1.4,
+                  fontWeight: FontWeight.w500,
                 ),
-                elevation: 0,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            SizedBox(width: 8.w),
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+              ),
+              child: Icon(Icons.refresh, size: 20.sp, color: Colors.black87),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+
+        // Submit Button
+        SizedBox(
+          width: double.infinity,
+          height: 50.h,
+          child: ElevatedButton.icon(
+            onPressed: controller.goToAttendance,
+            icon: Icon(Icons.calendar_month, size: 22.sp),
+            label: Text(
+              'Submit Attendance',
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1E88E5), // Brighter Blue
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              elevation: 0,
+            ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _mockMapLine(double width) {
+    return Container(
+      width: width.w,
+      height: 6.h,
+      decoration: BoxDecoration(
+        color: Colors.blueGrey.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(3.r),
       ),
     );
   }
 
   Widget _buildHistoryToday() {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF), // Light Blue Bg
-        borderRadius: BorderRadius.circular(16.r),
+        color: const Color(0xFFF5F9FF), // Very Light Blue Bg
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,20 +254,22 @@ class StudentHomePage extends GetView<HomeController> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: const Color(0xFF1F2937),
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 20.h),
           _buildHistoryRow(
-            icon: Icons.check_circle,
-            color: Colors.green,
+            icon: Icons.check,
+            iconBg: const Color(0xFF22C55E), // Green
             label: 'Check-In',
             time: '--:--:--',
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 16.h),
+          Divider(color: Colors.blueGrey.withValues(alpha: 0.1), height: 1),
+          SizedBox(height: 16.h),
           _buildHistoryRow(
-            icon: Icons.remove_circle,
-            color: Colors.red,
+            icon: Icons.remove,
+            iconBg: const Color(0xFFEF4444), // Red
             label: 'Check-Out',
             time: '--:--:--',
           ),
@@ -224,19 +280,26 @@ class StudentHomePage extends GetView<HomeController> {
 
   Widget _buildHistoryRow({
     required IconData icon,
-    required Color color,
+    required Color iconBg,
     required String label,
     required String time,
   }) {
     return Row(
       children: [
-        Icon(icon, color: color, size: 24.sp),
-        SizedBox(width: 12.w),
+        Container(
+          padding: EdgeInsets.all(6.w),
+          decoration: BoxDecoration(
+            color: iconBg,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: Colors.white, size: 16.sp),
+        ),
+        SizedBox(width: 16.w),
         Text(
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: Colors.black87,
+            color: const Color(0xFF374151),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -245,8 +308,9 @@ class StudentHomePage extends GetView<HomeController> {
           time,
           style: TextStyle(
             fontSize: 14.sp,
-            color: Colors.black87,
+            color: const Color(0xFF1F2937),
             fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
         ),
       ],
@@ -264,7 +328,7 @@ class StudentHomePage extends GetView<HomeController> {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: const Color(0xFF1F2937),
               ),
             ),
             TextButton(
@@ -272,49 +336,44 @@ class StudentHomePage extends GetView<HomeController> {
               child: Text(
                 'See All',
                 style: TextStyle(
-                  color: const Color(0xFF2F5680),
-                  fontSize: 12.sp,
+                  color: const Color(0xFF3B82F6),
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 12.h),
         SizedBox(
-          height: 120.h,
+          height: 130.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: controller.homeworkList.length,
-            separatorBuilder: (context, index) => SizedBox(width: 12.w),
+            separatorBuilder: (context, index) => SizedBox(width: 16.w),
             itemBuilder: (context, index) {
               final homework = controller.homeworkList[index];
               return Container(
-                width: 160.w,
-                padding: EdgeInsets.all(16.w),
+                width: 180.w,
+                padding: EdgeInsets.all(20.w),
                 decoration: BoxDecoration(
                   color: Color(homework['color']),
-                  borderRadius: BorderRadius.circular(16.r),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.menu_book,
-                            size: 20.sp,
-                            color: Colors.black87), // Placeholder icon
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            homework['subject'],
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                        // Icon(Icons.menu_book, size: 20.sp, color: Colors.black87), // Placeholder icon
+                        Text(
+                          homework['subject'],
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF1F2937),
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -323,7 +382,8 @@ class StudentHomePage extends GetView<HomeController> {
                       homework['title'],
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: Colors.black54,
+                        color: const Color(0xFF6B7280),
+                        height: 1.4,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -333,7 +393,7 @@ class StudentHomePage extends GetView<HomeController> {
                       'Due: ${homework['due']}',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: Colors.red,
+                        color: Color(homework['dueColor'] ?? 0xFFEF4444),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -354,7 +414,7 @@ class StudentHomePage extends GetView<HomeController> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -4),
             ),
