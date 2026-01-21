@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../../auth/domain/entities/user.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 import '../controllers/home_controller.dart';
 
 class StudentHomePage extends GetView<HomeController> {
@@ -15,157 +19,186 @@ class StudentHomePage extends GetView<HomeController> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF2F5680), // Dark Blue Background
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            // Header Section
-            Padding(
-              padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 40.h),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 24.r,
-                    backgroundImage: user?.profileImage != null
-                        ? NetworkImage(user!.profileImage!)
-                        : null,
-                    backgroundColor: Colors.orange, // Orange bg for avatar
-                    child: user?.profileImage == null
-                        ? Image.asset('assets/images/onboarding1.png',
-                            width: 40.w) // Use asset if available or just icon
-                        // ? Icon(Icons.person, size: 30.sp, color: Colors.white)
-                        : null,
-                  ),
-                  SizedBox(width: 12.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user?.name ?? 'Ahmad Rizki', // Placeholder name
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'X MIPA B', // Placeholder class
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Stack(
-                    children: [
-                      Icon(Icons.notifications,
-                          color: Colors.white, size: 28.sp),
-                      Positioned(
-                        right: 2,
-                        top: 2,
-                        child: Container(
-                          width: 8.w,
-                          height: 8.w,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
+      body: Obx(() {
+        switch (controller.selectedIndex.value) {
+          case 0:
+            return _buildHomeContent(user);
+          case 1:
+            return const Center(
+                child: Text('Attendance Page',
+                    style: TextStyle(color: Colors.white)));
+          case 2:
+            return const Center(
+                child: Text('Homework Page',
+                    style: TextStyle(color: Colors.white)));
+          case 3:
+            return const ProfilePage();
+          default:
+            return _buildHomeContent(user);
+        }
+      }),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
 
-            // Main Content Area
-            Expanded(
-              child: Stack(
-                children: [
-                  // Scrollable Content
-                  SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Container(
-                      decoration: BoxDecoration(
+  Widget _buildHomeContent(User? user) {
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        children: [
+          // Header Section
+          Padding(
+            padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 20.h),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 24.r,
+                  backgroundImage: user?.profileImage != null
+                      ? NetworkImage(user!.profileImage!)
+                      : null,
+                  backgroundColor: Colors.orange, // Orange bg for avatar
+                  child: user?.profileImage == null
+                      ? Image.asset('assets/images/onboarding1.png',
+                          width: 40.w) // Use asset if available or just icon
+                      // ? Icon(Icons.person, size: 30.sp, color: Colors.white)
+                      : null,
+                ),
+                SizedBox(width: 12.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user?.name ?? 'Ahmad Rizki', // Placeholder name
+                      style: TextStyle(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.r),
-                          topRight: Radius.circular(30.r),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'X MIPA B', // Placeholder class
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Stack(
+                  children: [
+                    Icon(Icons.notifications, color: Colors.white, size: 28.sp),
+                    Positioned(
+                      right: 2,
+                      top: 2,
+                      child: Container(
+                        width: 8.w,
+                        height: 8.w,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Attendance Card (Floating)
-                            _buildAttendanceCard(),
-                            SizedBox(height: 30.h),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
 
-                            // History Today
-                            _buildHistoryToday(),
-                            SizedBox(height: 30.h),
+          // Main Content Area
+          Expanded(
+            child: Stack(
+              children: [
+                // Scrollable Content
+                SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.r),
+                        topRight: Radius.circular(30.r),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Attendance Card (Floating)
+                          _buildAttendanceCard(),
+                          SizedBox(height: 30.h),
 
-                            // Homework Section
-                            _buildHomeworkSection(),
-                            SizedBox(height: 80.h), // Bottom padding
-                          ],
-                        ),
+                          // History Today
+                          _buildHistoryToday(),
+                          SizedBox(height: 30.h),
+
+                          // Homework Section
+                          _buildHomeworkSection(),
+                          SizedBox(height: 80.h), // Bottom padding
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
   Widget _buildAttendanceCard() {
     return Column(
       children: [
-        // Map Placeholder
+        // Map Widget
         Container(
-          height: 150.h,
+          height: 180.h,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xFFF0F4F8), // Light bluish gray
+            color: const Color(0xFFF0F4F8),
             borderRadius: BorderRadius.circular(16.r),
-            image: const DecorationImage(
-              // Fallback if no asset, but using a colored container with mock elements
-              // If you have a map asset, use it here.
-              // For now, I'll stick to the mock stack but make it look cleaner
-              image: AssetImage(
-                  'assets/images/map_placeholder.png'), // Hypothetical
-              fit: BoxFit.cover,
-            ),
           ),
-          child: Stack(
-            children: [
-              // Since we don't have the asset, we use the mock
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE5E7EB),
-                  borderRadius: BorderRadius.circular(16.r),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16.r),
+            child: Obx(() {
+              final position = controller.currentPosition.value ??
+                  const LatLng(-6.2088, 106.8456);
+              return FlutterMap(
+                key: ValueKey(position),
+                options: MapOptions(
+                  initialCenter: position,
+                  initialZoom: 15.0,
+                  interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                  ),
                 ),
-              ),
-              Center(
-                child: Icon(Icons.map_outlined,
-                    size: 40.sp, color: Colors.blueGrey.withValues(alpha: 0.3)),
-              ),
-              Positioned(top: 30, left: 40, child: _mockMapLine(60)),
-              Positioned(top: 60, left: 30, child: _mockMapLine(90)),
-              Positioned(bottom: 40, right: 50, child: _mockMapLine(70)),
-              // Pin
-              Center(
-                child: Icon(Icons.location_on, color: Colors.red, size: 36.sp),
-              ),
-            ],
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.lms_mobile',
+                  ),
+                  if (controller.currentPosition.value != null)
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: position,
+                          width: 40,
+                          height: 40,
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 40.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              );
+            }),
           ),
         ),
         SizedBox(height: 16.h),
@@ -177,27 +210,40 @@ class StudentHomePage extends GetView<HomeController> {
             Icon(Icons.location_on, size: 24.sp, color: Colors.black),
             SizedBox(width: 12.w),
             Expanded(
-              child: Text(
-                'Jl. Raya Bekasi No.13910, RT.7/RW.1, Cakung Bar., Kec. Cakung',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: const Color(0xFF2F5680), // Dark blue text
-                  height: 1.4,
-                  fontWeight: FontWeight.w500,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              child: Obx(() => Text(
+                    controller.currentAddress.value,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: const Color(0xFF2F5680), // Dark blue text
+                      height: 1.4,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )),
             ),
             SizedBox(width: 8.w),
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+            InkWell(
+              onTap: controller.requestLocation,
+              borderRadius: BorderRadius.circular(20.r),
+              child: Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+                ),
+                child: Obx(() => controller.isLoadingLocation.value
+                    ? SizedBox(
+                        width: 20.sp,
+                        height: 20.sp,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black87,
+                        ),
+                      )
+                    : Icon(Icons.refresh, size: 20.sp, color: Colors.black87)),
               ),
-              child: Icon(Icons.refresh, size: 20.sp, color: Colors.black87),
             ),
           ],
         ),
@@ -206,13 +252,13 @@ class StudentHomePage extends GetView<HomeController> {
         // Submit Button
         SizedBox(
           width: double.infinity,
-          height: 50.h,
+          height: 48.h,
           child: ElevatedButton.icon(
             onPressed: controller.goToAttendance,
-            icon: Icon(Icons.calendar_month, size: 22.sp),
+            icon: Icon(Icons.calendar_month, size: 11.sp),
             label: Text(
               'Submit Attendance',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1E88E5), // Brighter Blue
@@ -225,17 +271,6 @@ class StudentHomePage extends GetView<HomeController> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _mockMapLine(double width) {
-    return Container(
-      width: width.w,
-      height: 6.h,
-      decoration: BoxDecoration(
-        color: Colors.blueGrey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(3.r),
-      ),
     );
   }
 

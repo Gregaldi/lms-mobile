@@ -31,10 +31,12 @@ class AuthBinding extends Bindings {
     // Auth dependencies
     Get.lazyPut<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(Get.find<DioClient>()),
+      fenix: true,
     );
 
     Get.lazyPut<AuthLocalDataSource>(
       () => AuthLocalDataSourceImpl(Get.find<SharedPreferences>()),
+      fenix: true,
     );
 
     Get.lazyPut<AuthRepository>(
@@ -42,12 +44,15 @@ class AuthBinding extends Bindings {
         remoteDataSource: Get.find<AuthRemoteDataSource>(),
         localDataSource: Get.find<AuthLocalDataSource>(),
       ),
+      fenix: true,
     );
 
-    Get.lazyPut(() => LoginUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut(() => LogoutUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut(() => GetCurrentUserUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut(() => CheckAuthUseCase(Get.find<AuthRepository>()));
+    Get.lazyPut(() => LoginUseCase(Get.find<AuthRepository>()), fenix: true);
+    Get.lazyPut(() => LogoutUseCase(Get.find<AuthRepository>()), fenix: true);
+    Get.lazyPut(() => GetCurrentUserUseCase(Get.find<AuthRepository>()),
+        fenix: true);
+    Get.lazyPut(() => CheckAuthUseCase(Get.find<AuthRepository>()),
+        fenix: true);
 
     Get.lazyPut(
       () => AuthController(
@@ -56,6 +61,7 @@ class AuthBinding extends Bindings {
         getCurrentUserUseCase: Get.find<GetCurrentUserUseCase>(),
         checkAuthUseCase: Get.find<CheckAuthUseCase>(),
       ),
+      fenix: true,
     );
   }
 }
