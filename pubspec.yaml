@@ -41,6 +41,7 @@ dependencies:
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   geocoding: ^4.0.0
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:

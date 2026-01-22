@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../attendance/presentation/pages/attendance_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../controllers/home_controller.dart';
 
@@ -24,9 +25,7 @@ class StudentHomePage extends GetView<HomeController> {
           case 0:
             return _buildHomeContent(user);
           case 1:
-            return const Center(
-                child: Text('Attendance Page',
-                    style: TextStyle(color: Colors.white)));
+            return const AttendancePage();
           case 2:
             return const Center(
                 child: Text('Homework Page',
