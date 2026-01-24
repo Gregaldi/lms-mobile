@@ -24,7 +24,8 @@ class AssignmentDetailPage extends GetView<AssignmentsController> {
               color: Colors.grey[100],
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.arrow_back_ios_new, size: 16.sp, color: Colors.black),
+            child: Icon(Icons.arrow_back_ios_new,
+                size: 16.sp, color: Colors.black),
           ),
           onPressed: () => Get.back(),
         ),
@@ -178,13 +179,15 @@ class AssignmentDetailPage extends GetView<AssignmentsController> {
                         GestureDetector(
                           onTap: () {
                             // TODO: Implement file picking
-                            Get.snackbar('Upload', 'File picker to be implemented');
+                            Get.snackbar(
+                                'Upload', 'File picker to be implemented');
                           },
                           child: Container(
                             width: double.infinity,
                             height: 180.h,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF3F4F6), // White/Light Grey
+                              color:
+                                  const Color(0xFFF3F4F6), // White/Light Grey
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Column(
@@ -246,7 +249,8 @@ class AssignmentDetailPage extends GetView<AssignmentsController> {
                 onPressed: () {
                   // TODO: Implement submit logic
                 },
-                icon: Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
+                icon:
+                    Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
                 label: Text(
                   'Submit',
                   style: TextStyle(
