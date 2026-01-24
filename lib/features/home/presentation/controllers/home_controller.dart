@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:lms_mobile/core/routes/app_routes.dart';
 
 class HomeController extends GetxController {
   final RxInt selectedIndex = 0.obs;
@@ -176,9 +177,6 @@ class HomeController extends GetxController {
   }
 
   // Navigation to Attendance Page
-  void goToAttendance() {
-    // requestLocation();
-  }
 }
 
 // Simple Bottom Sheet Widget for Location Error

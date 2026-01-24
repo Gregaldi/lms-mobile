@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lms_mobile/core/routes/app_routes.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../controllers/attendance_controller.dart';
 import '../../domain/entities/attendance.dart';
+import 'mark_attendance_page.dart';
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -216,9 +218,7 @@ class _AttendancePageState extends State<AttendancePage> {
           final data = controller.attendanceHistory.isNotEmpty
               ? controller.attendanceHistory
               : _mockData;
-          return data
-              .where((att) => isSameDay(att.timestamp, day))
-              .toList();
+          return data.where((att) => isSameDay(att.timestamp, day)).toList();
         },
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, day, events) {
@@ -243,6 +243,9 @@ class _AttendancePageState extends State<AttendancePage> {
                       break;
                     case AttendanceStatus.excused:
                       dotColor = Colors.blue;
+                      break;
+                    case AttendanceStatus.sick:
+                      dotColor = Colors.red;
                       break;
                   }
 
@@ -336,60 +339,69 @@ class _AttendancePageState extends State<AttendancePage> {
       case AttendanceStatus.excused:
         statusColor = Colors.blue;
         break;
+      case AttendanceStatus.sick:
+        statusColor = Colors.red;
+        break;
     }
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2F5680), // Dark blue card background like image
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                DateFormat('d MMMM yyyy').format(attendance.timestamp),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(AppRoutes.attendanceDetail, arguments: attendance);
+      },
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color:
+              const Color(0xFF2F5680), // Dark blue card background like image
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat('d MMMM yyyy').format(attendance.timestamp),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                DateFormat('EEE').format(attendance.timestamp),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.white.withOpacity(0.8),
+                SizedBox(height: 4.h),
+                Text(
+                  DateFormat('EEE').format(attendance.timestamp),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.white.withOpacity(0.8),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                width: 8.w,
-                height: 8.w,
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  shape: BoxShape.circle,
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                statusText,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: statusColor,
+                SizedBox(width: 8.w),
+                Text(
+                  statusText,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: statusColor,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

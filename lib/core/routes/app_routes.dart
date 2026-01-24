@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/attendance/presentation/pages/mark_attendance_page.dart';
+import '../../features/attendance/presentation/pages/attendance_detail_page.dart';
+import '../../features/assignments/presentation/pages/assignment_detail_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/home/presentation/pages/student_home_page.dart';
 import '../constants/app_constants.dart';
@@ -16,6 +18,8 @@ class AppRoutes {
   static const String parentHome = '/parent/home';
   static const String adminHome = '/admin/home';
   static const String markAttendance = '/attendance/mark';
+  static const String attendanceDetail = '/attendance/detail';
+  static const String assignmentDetail = '/assignment/detail';
 
   static List<GetPage> get pages => [
         GetPage(
@@ -32,7 +36,15 @@ class AppRoutes {
           name: markAttendance,
           page: () => const MarkAttendancePage(),
           binding: AttendanceBinding(),
-          middlewares: [AuthMiddleware()],
+        ),
+        GetPage(
+          name: attendanceDetail,
+          page: () => const AttendanceDetailPage(),
+          binding: AttendanceBinding(),
+        ),
+        GetPage(
+          name: assignmentDetail,
+          page: () => const AssignmentDetailPage(),
         ),
         GetPage(
           name: studentHome,

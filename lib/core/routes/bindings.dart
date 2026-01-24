@@ -13,6 +13,7 @@ import '../../features/attendance/domain/usecases/attendance_usecases.dart';
 import '../../features/attendance/presentation/controllers/attendance_controller.dart';
 import '../../features/onboarding/presentation/controllers/onboarding_controller.dart';
 import '../../features/home/presentation/controllers/home_controller.dart';
+import '../../features/assignments/presentation/controllers/assignments_controller.dart';
 
 class AuthBinding extends Bindings {
   @override
@@ -54,14 +55,14 @@ class AuthBinding extends Bindings {
     Get.lazyPut(() => CheckAuthUseCase(Get.find<AuthRepository>()),
         fenix: true);
 
-    Get.lazyPut(
-      () => AuthController(
+    Get.put(
+      AuthController(
         loginUseCase: Get.find<LoginUseCase>(),
         logoutUseCase: Get.find<LogoutUseCase>(),
         getCurrentUserUseCase: Get.find<GetCurrentUserUseCase>(),
         checkAuthUseCase: Get.find<CheckAuthUseCase>(),
       ),
-      fenix: true,
+      permanent: true,
     );
   }
 }
@@ -71,10 +72,12 @@ class AttendanceBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AttendanceRemoteDataSource>(
       () => AttendanceRemoteDataSourceImpl(Get.find<DioClient>()),
+      fenix: true,
     );
 
     Get.lazyPut<LocationService>(
       () => LocationServiceImpl(),
+      fenix: true,
     );
 
     Get.lazyPut<AttendanceRepository>(
@@ -82,14 +85,19 @@ class AttendanceBinding extends Bindings {
         remoteDataSource: Get.find<AttendanceRemoteDataSource>(),
         locationService: Get.find<LocationService>(),
       ),
+      fenix: true,
     );
 
-    Get.lazyPut(() => MarkAttendanceUseCase(Get.find<AttendanceRepository>()));
+    Get.lazyPut(() => MarkAttendanceUseCase(Get.find<AttendanceRepository>()),
+        fenix: true);
     Get.lazyPut(
-        () => GetAttendanceHistoryUseCase(Get.find<AttendanceRepository>()));
+        () => GetAttendanceHistoryUseCase(Get.find<AttendanceRepository>()),
+        fenix: true);
     Get.lazyPut(
-        () => GetCurrentLocationUseCase(Get.find<AttendanceRepository>()));
-    Get.lazyPut(() => CheckGeofenceUseCase(Get.find<AttendanceRepository>()));
+        () => GetCurrentLocationUseCase(Get.find<AttendanceRepository>()),
+        fenix: true);
+    Get.lazyPut(() => CheckGeofenceUseCase(Get.find<AttendanceRepository>()),
+        fenix: true);
 
     Get.lazyPut(
       () => AttendanceController(
@@ -98,6 +106,7 @@ class AttendanceBinding extends Bindings {
         getCurrentLocationUseCase: Get.find<GetCurrentLocationUseCase>(),
         checkGeofenceUseCase: Get.find<CheckGeofenceUseCase>(),
       ),
+      fenix: true,
     );
   }
 }
@@ -107,6 +116,7 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => HomeController());
     AttendanceBinding().dependencies();
+    Get.lazyPut(() => AssignmentsController());
   }
 }
 

@@ -8,7 +8,7 @@ class Attendance {
   final String? photoUrl;
   final AttendanceStatus status;
   final String? remarks;
-  
+
   Attendance({
     required this.id,
     required this.userId,
@@ -26,15 +26,16 @@ enum AttendanceStatus {
   present,
   late,
   absent,
-  excused;
-  
+  excused,
+  sick;
+
   String get value => name;
 }
 
 class LocationData {
   final double latitude;
   final double longitude;
-  
+
   LocationData({
     required this.latitude,
     required this.longitude,

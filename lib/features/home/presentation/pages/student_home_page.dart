@@ -3,9 +3,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:lms_mobile/core/routes/app_routes.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../../attendance/presentation/pages/attendance_page.dart';
+import '../../../assignments/presentation/pages/assignments_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../controllers/home_controller.dart';
 
@@ -27,9 +29,7 @@ class StudentHomePage extends GetView<HomeController> {
           case 1:
             return const AttendancePage();
           case 2:
-            return const Center(
-                child: Text('Homework Page',
-                    style: TextStyle(color: Colors.white)));
+            return const AssignmentsPage();
           case 3:
             return const ProfilePage();
           default:
@@ -253,7 +253,9 @@ class StudentHomePage extends GetView<HomeController> {
           width: double.infinity,
           height: 48.h,
           child: ElevatedButton.icon(
-            onPressed: controller.goToAttendance,
+            onPressed: () {
+              Get.toNamed(AppRoutes.markAttendance);
+            },
             icon: Icon(Icons.calendar_month, size: 11.sp),
             label: Text(
               'Submit Attendance',
